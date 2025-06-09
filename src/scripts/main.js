@@ -2,18 +2,29 @@
 
 const table = document.querySelector('table');
 const columnIndex = 1;
+const rows = Array.from(table.rows);
 
-const columnValues = Array.from(table.rows).map(row => {
-  return row.cells[columnIndex].textContent
+const columnValues = rows.map((row) => {
+  return row.cells[columnIndex].textContent;
 });
 
-Array.from(table.rows).forEach((row, i) => {
-  const isHeaderOrFooter = row.parentElement.tagName === 'THEAD' || row.parentElement.tagName === 'TFOOT';
+rows.forEach((row, i) => {
+  const isHeaderOrFooter =
+    row.parentElement.tagName === 'THEAD' ||
+    row.parentElement.tagName === 'TFOOT';
 
-  const cell = isHeaderOrFooter ? document.createElement('th') : document.createElement('td');
-  cell.textContent = columnValues[i];
+  const newCell = isHeaderOrFooter
+    ? document.createElement('th')
+    : document.createElement('td');
 
-  const insertIndex = Math.max(0, row.cells.length - 1);
+  newCell.textContent = columnValues[i];
 
-  row.insertBefore(cell, row.cells[insertIndex]);
+  const insertIndex = columnIndex + 3;
+  const referenceCell = row.cells[insertIndex];
+
+  if (referenceCell) {
+    row.insertBefore(newCell, referenceCell);
+  } else {
+    row.appendChild(newCell);
+  }
 });
